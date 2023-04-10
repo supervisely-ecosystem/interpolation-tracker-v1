@@ -61,7 +61,7 @@ class InterpolationTracker(object):
         object_frames_bounds = self._get_objects_frames_bounds()
 
         self.objects_info: Dict[int, ObjectInfo] = defaultdict(ObjectInfo)
-
+        default_geometry = None
         for info in figures_info:
             oid = info["objectId"]
             left, right = object_frames_bounds[oid]
@@ -71,6 +71,14 @@ class InterpolationTracker(object):
                 continue
 
             geometry_type = info["geometryType"]
+            if default_geometry is None:
+                default_geometry = geometry_type
+
+            if default_geometry != geometry_type:
+                raise ValueError(
+                    f"All object's figures must be of the same geometry type: #{oid}-{default_geometry}",
+                )
+
             geometry = info["geometry"]
             sly_fig = sly.deserialize_geometry(geometry_type, geometry)
             self.objects_info[oid].frames.append(frame)
@@ -78,7 +86,12 @@ class InterpolationTracker(object):
 
     def track(self):
         for cur_pos, object_id in enumerate(self.objects_id, start=1):
-            self._track_obj(object_id, cur_pos)
+            stop = self._track_obj(object_id, cur_pos)
+            if stop:
+                break
+
+    def finish_tracking(self):
+        self._notify(len(self.objects_id) + 1)
 
     def _get_objects_frames_bounds(self):
         resp = g.api.post(
@@ -115,7 +128,7 @@ class InterpolationTracker(object):
         filter_fig["fields"] = ["id", "objectId", "meta", "geometry", "geometryType"]
         return filter_fig
 
-    def _notify(self, cur_pos: int):
+    def _notify(self, cur_pos: int) -> bool:
         # TODO: normal notification
         stop = g.api.video.notify_progress(
             self.track_id,
@@ -123,10 +136,12 @@ class InterpolationTracker(object):
             self.first_index,
             self.last_index,
             cur_pos,
-            len(self.objects_id),
+            len(self.objects_id) + 1,
         )
 
-    def _track_obj(self, object_id: int, cur_pos: int):
+        return stop
+
+    def _track_obj(self, object_id: int, cur_pos: int) -> bool:
         frames = self.objects_info[object_id].frames
         figures = self.objects_info[object_id].figures
 
@@ -160,4 +175,5 @@ class InterpolationTracker(object):
                 track_id=self.track_id,
             )
 
-        self._notify(cur_pos)
+        stop = self._notify(cur_pos)
+        return stop
