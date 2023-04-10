@@ -26,6 +26,7 @@ sys.path.append(root_source_path)
 team_id = int(os.environ["context.teamId"])
 workspace_id = int(os.environ["context.workspaceId"])
 # device = os.environ['modal.state.device']
+shape_complexity = os.environ["modal.state.shapeComplexity"]
 
 
 local_info_dir = os.path.join(my_app.data_dir, "info")
