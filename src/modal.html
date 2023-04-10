@@ -5,7 +5,7 @@
             <el-option key="greedily" label="Greedily" value="greedily"></el-option>
             <el-option key="uniform" label="Uniform" value="uniform"></el-option>
         </el-select>
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames">
             <el-collapse-item title="Greedy algorithm" name="1">
                 <el-carousel height="150px">
                     <el-carousel-item>
@@ -38,5 +38,4 @@
             </el-collapse-item>
         </el-collapse>
     </sly-field>
-    
 </div>
