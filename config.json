@@ -1,11 +1,11 @@
 {
-    "name": "Polygon interpolation tracker",
+    "name": "Interpolation tracker",
     "type": "app",
     "categories": [
       "tracking",
       "video"
     ],
-    "description": "Interpolate rectangles on video",
+    "description": "Track polygons, rectangles and points using linear interpolation",
     "docker_image": "supervisely/base-py-sdk:6.70.15",
     "main_script": "src/main.py",
   
