@@ -1,4 +1,6 @@
+from __future__ import annotations
 import numpy as np
+from enum import Enum
 from typing import List
 from supervisely.geometry.geometry import Geometry
 from supervisely import Polygon, PointLocation
@@ -10,12 +12,31 @@ from interpolation.utils import (
     add_points_to_obj,
     rm_points,
     sort_for_interpolation,
+    add_points_to_obj_greedly,
 )
 
 
+class ShapeComplexity(Enum):
+    greedily: str = "greedily"
+    uniform: str = "uniform"
+
+    @classmethod
+    def get(cls, complexity_type: str) -> ShapeComplexity:
+        if complexity_type == "greedily":
+            return ShapeComplexity.greedily
+        elif complexity_type == "uniform":
+            return ShapeComplexity.uniform
+        raise ValueError(f"Comlexity type {complexity_type} does not exists")
+
+
 class BasePolygonInterpolation(BaseInterpolation):
+    def __init__(self, shape_complexity: "greedily"):
+        self.shape_complexity = ShapeComplexity.get(shape_complexity)
+        super().__init__()
+
     def numpy_to_geometry(self, obj: np.ndarray) -> Geometry:
-        obj = rm_points(obj, self._min_d, self._new_per_side)
+        if self.shape_complexity is ShapeComplexity.uniform:
+            obj = rm_points(obj, self._min_d, self._new_per_side)
         obj = obj.astype(int)
         exterior = [PointLocation(*obj_point) for obj_point in obj]
         return Polygon(exterior=exterior)
@@ -31,12 +52,15 @@ class BasePolygonInterpolation(BaseInterpolation):
         return obj.exterior_np[::-1]
 
     def interpolate(
-        self, frames: List[int], figures: List[Geometry], all_frames: List[int]
+        self,
+        frames: List[int],
+        figures: List[Geometry],
+        all_frames: List[int],
     ) -> List[Geometry]:
         fig1 = figures[0]
 
         if not isinstance(fig1, Polygon):
-            raise ValueError("Use only for polygons.")
+            raise ValueError("You can use this class only for polygons.")
 
         self._sgn = obj_order_sign(fig1.exterior_np)
         figures_np = [self.geometry_to_numpy(fig) for fig in figures]
@@ -52,12 +76,18 @@ class BasePolygonInterpolation(BaseInterpolation):
             self._min_d = min(min_dist(start_fig), min_dist(end_fig))
 
             # create points for
-            lcm_len = np.lcm(start_len, end_len)
-            start_total_points = lcm_len - start_len
-            end_total_points = lcm_len - end_len
-            self._new_per_side = min(start_total_points // start_len, end_total_points // end_len)
-            start_fig = add_points_to_obj(start_fig, start_total_points)
-            end_fig = add_points_to_obj(end_fig, end_total_points)
+            if self.shape_complexity is ShapeComplexity.uniform:
+                lcm_len = np.lcm(start_len, end_len)
+                start_total_points = lcm_len - start_len
+                end_total_points = lcm_len - end_len
+                self._new_per_side = min(
+                    start_total_points // start_len,
+                    end_total_points // end_len,
+                )
+                start_fig = add_points_to_obj(start_fig, start_total_points)
+                end_fig = add_points_to_obj(end_fig, end_total_points)
+            elif self.shape_complexity is ShapeComplexity.greedily:
+                start_fig, end_fig = add_points_to_obj_greedly(start_fig, end_fig)
 
             # sort
             start_fig, end_fig = sort_for_interpolation(start_fig, end_fig)

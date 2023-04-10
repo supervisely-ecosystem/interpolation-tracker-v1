@@ -38,7 +38,7 @@ def get_session_info(api: sly.Api, task_id, context, state, app_logger):
 @sly.timeit
 @send_error_data
 def track(api: sly.Api, task_id, context, state, app_logger):
-    model = LinearPolygonInterpolation()
+    model = LinearPolygonInterpolation(g.shape_complexity)
     tracker = InterpolationTracker(context, model)
     tracker.track()
     return
