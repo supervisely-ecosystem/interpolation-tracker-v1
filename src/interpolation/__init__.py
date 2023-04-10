@@ -1,2 +1,3 @@
 from interpolation.rectangle import LinearRectangleInterpolation
 from interpolation.polygon import LinearPolygonInterpolation
+from interpolation.point import LinearPointInterpolation
