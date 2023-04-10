@@ -1,5 +1,6 @@
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Dict
+from collections import namedtuple
 
 
 def min_dist(obj: np.ndarray) -> float:
@@ -133,3 +134,77 @@ def add_points_to_obj(obj: np.ndarray, total_points: int) -> np.ndarray:
         start_point = point
 
     return np.array(new_obj[:-1])
+
+
+def add_points_to_obj_greedly(obj1: np.ndarray, obj2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    PosDist = namedtuple("PosDist", ["pos", "dist"])
+
+    if len(obj1) > len(obj2):
+        bg_obj, sm_obj = obj1.copy(), obj2.copy()
+        target = obj2
+        target_str = "obj2"
+    elif len(obj2) > len(obj1):
+        bg_obj, sm_obj = obj2.copy(), obj1.copy()
+        target = obj1
+        target_str = "obj1"
+    else:
+        return obj1, obj2
+
+    sm_bg_index_dct: Dict[int, PosDist] = {pos: PosDist(-1, np.inf) for pos in range(len(sm_obj))}
+    used_bg_ind = set()
+    bg_obj = move_to_axis_begin(bg_obj)
+    sm_obj = move_to_axis_begin(sm_obj)
+
+    for sm_i, point in enumerate(sm_obj):
+        for bg_i, nearest_point in enumerate(bg_obj):
+            dist = np.linalg.norm(point - nearest_point)
+            if sm_bg_index_dct[sm_i].dist > dist and bg_i not in used_bg_ind:
+                sm_bg_index_dct[sm_i] = PosDist(bg_i, dist)
+        used_bg_ind.add(sm_bg_index_dct[sm_i].pos)
+        # bg_sm_index_dct[sm_bg_index_dct[sm_i].pos] = sm_i
+
+    new_sm_obj = []
+    prev_i, prev_point = 0, target[0]
+
+    def calc_diff(prev_i, next_i, obj_len):
+        if prev_i < next_i:
+            return abs(prev_i - next_i)
+        return obj_len - prev_i + next_i
+
+    for sm_i, point in enumerate(np.roll(target, -1, axis=0), start=1):
+        sm_i = sm_i % len(sm_obj)
+        diff = calc_diff(sm_bg_index_dct[prev_i].pos, sm_bg_index_dct[sm_i].pos, len(bg_obj))
+
+        if diff < 1:
+            raise ValueError("Smth goes wrong.")
+        elif diff == 1:
+            new_sm_obj.append(list(point))
+            prev_point = point
+            prev_i = sm_i
+            continue
+
+        dx = (point[0] - prev_point[0]) / diff
+        dy = (point[1] - prev_point[1]) / diff
+
+        for i in range(1, diff):
+            nx = prev_point[0] + dx * i
+            ny = prev_point[1] + dy * i
+            new_sm_obj.append([nx, ny])
+
+        new_sm_obj.append(list(point))
+        prev_point = point
+        prev_i = sm_i
+
+    if target_str == "obj1":
+        return np.array(new_sm_obj), obj2
+    return obj1, np.array(new_sm_obj)
+
+
+def move_to_axis_begin(obj: np.ndarray) -> np.ndarray:
+    x_shift = min(obj[:, 0])
+    y_shift = min(obj[:, 1])
+
+    obj[:, 0] -= x_shift
+    obj[:, 1] -= y_shift
+
+    return obj
