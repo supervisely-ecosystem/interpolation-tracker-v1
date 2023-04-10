@@ -1,0 +1,21 @@
+{
+    "name": "Rectangle interpolation tracker",
+    "type": "app",
+    "categories": [
+      "tracking",
+      "video"
+    ],
+    "description": "Interpolate rectangles on video",
+    "docker_image": "supervisely/base-py-sdk:6.70.15",
+    "main_script": "src/main.py",
+  
+    "task_location": "application_sessions",
+    "icon": "https://img.icons8.com/color/100/000000/5.png",
+    "icon_cover": true,
+    "isolate": true,
+    "headless": true,
+    "session_tags": [
+      "sly_video_tracking"
+    ],
+    "community_agent": true
+  }
