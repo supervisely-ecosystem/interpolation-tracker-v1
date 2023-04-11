@@ -20,5 +20,10 @@
     "session_tags": [
       "sly_video_tracking"
     ],
+    "allowed_shapes" : [
+      "polygon",
+      "point",
+      "rectangle"
+    ],
     "community_agent": true
   }
