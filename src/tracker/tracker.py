@@ -156,8 +156,13 @@ class InterpolationTracker(object):
         # all_frames = list(range(min(frames), max(frames)))
 
         if len(frames) < 2:
-            g.logger.info(f"Skip interpolation for object #{object_id}: not enough figures.")
-            raise ValueError(f"Skip interpolation: not enough figures for object #{object_id}.")
+            if self.direction is Direction.forward:
+                msg = f"Skip interpolation for object #{object_id}: next frames don't have enough figures."
+            else:
+                msg = f"Skip interpolation for object #{object_id}: previous frames don't have enough figures."
+
+            g.logger.info(msg)
+            raise ValueError(msg)
 
         interpol_geom = self.interp_model.interpolate(sorted_frames, sorted_figures, all_frames)
 
