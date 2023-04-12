@@ -1,13 +1,22 @@
 import bisect
 from enum import Enum
 from http import HTTPStatus
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 from typing import Dict, List, Tuple
+from dataclasses import dataclass, field
+from supervisely.geometry.geometry import Geometry
+
 
 import sly_globals as g
 from interpolation.base import BaseInterpolation
 
 import supervisely_lib as sly
+
+
+@dataclass
+class ObjectInfo:
+    frames: List[int] = field(default_factory=list)
+    figures: List[Geometry] = field(default_factory=list)
 
 
 class Direction(Enum):
@@ -49,8 +58,6 @@ class InterpolationTracker(object):
         return obj_info.json()["datasetId"]
 
     def match_object_figures_on_frames(self):
-        ObjectInfo = namedtuple("ObjectInfo", ["frames", "figures"], defaults=[[], []])
-
         # request info
         response = g.api.post("figures.list", data=self._make_filter())
 
@@ -83,6 +90,7 @@ class InterpolationTracker(object):
             sly_fig = sly.deserialize_geometry(geometry_type, geometry)
             self.objects_info[oid].frames.append(frame)
             self.objects_info[oid].figures.append(sly_fig)
+        self._check_figures()
 
     def track(self):
         for cur_pos, object_id in enumerate(self.objects_id, start=1):
@@ -108,16 +116,17 @@ class InterpolationTracker(object):
         return bounds
 
     def _find_key_frames(self, frames: List[int]) -> Tuple[int, int]:
+        sframes = sorted(frames)
         if self.direction is Direction.forward:
             start = self.first_index
-            end_i = bisect.bisect_left(sorted(frames), self.last_index)
+            end_i = bisect.bisect_left(sframes, self.last_index)
             end_i = min(end_i, len(frames) - 1)
-            end = frames[end_i]
+            end = sframes[end_i]
         else:
             end = self.last_index
-            start_i = bisect.bisect_right(sorted(frames), self.first_index) - 1
+            start_i = bisect.bisect_right(sframes, self.first_index) - 1
             start_i = max(0, start_i)
-            start = frames[start_i]
+            start = sframes[start_i]
         return start, end
 
     def _make_filter(self):
@@ -141,6 +150,19 @@ class InterpolationTracker(object):
 
         return stop
 
+    def _check_figures(self):
+        for object_id in self.objects_id:
+            frames = self.objects_info[object_id].frames
+
+            if len(frames) < 2:
+                if self.direction is Direction.forward:
+                    msg = f"Skip interpolation for object #{object_id}: next frames don't have enough figures."
+                else:
+                    msg = f"Skip interpolation for object #{object_id}: previous frames don't have enough figures."
+
+                g.logger.info(msg)
+                raise ValueError(msg)
+
     def _track_obj(self, object_id: int, cur_pos: int) -> bool:
         frames = self.objects_info[object_id].frames
         figures = self.objects_info[object_id].figures
@@ -154,15 +176,6 @@ class InterpolationTracker(object):
 
         # TODO: ask about full interpolation
         # all_frames = list(range(min(frames), max(frames)))
-
-        if len(frames) < 2:
-            if self.direction is Direction.forward:
-                msg = f"Skip interpolation for object #{object_id}: next frames don't have enough figures."
-            else:
-                msg = f"Skip interpolation for object #{object_id}: previous frames don't have enough figures."
-
-            g.logger.info(msg)
-            raise ValueError(msg)
 
         interpol_geom = self.interp_model.interpolate(sorted_frames, sorted_figures, all_frames)
 
