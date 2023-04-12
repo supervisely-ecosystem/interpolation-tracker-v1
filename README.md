@@ -1,8 +1,43 @@
-# Interpolation tracker (v1 app)
+<div align="center" markdown> 
+<img src="xxx" />
+
+# Interpolation tracker
+  
+<p align="center">
+  <a href="#Overview">Overview</a> •
+  <a href="#How-To-Run">How To Run</a> •
+  <a href="#Polygons-interpolation-settings">Polygons interpolation settings</a> 
+</p>
+
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/interpolation_tracker_v1)
+[![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/interpolation_tracker_v1)
+[![views](https://app.supervise.ly/img/badges/views/supervisely-ecosystem/interpolation_tracker_v1)](https://supervise.ly)
+[![runs](https://app.supervise.ly/img/badges/runs/supervisely-ecosystem/interpolation_tracker_v1)](https://supervise.ly)
+
+</div>
+
+# Overview 
 
 This tracker uses linear (pointwise) interpolation between figures on various frames to track points, polygons, and rectangles.
 
-## Polygons interpolation settings
+# How To Run
+
+1. Start the application from Ecosystem
+ 
+<br>
+
+2. Select the polygon interpolation algorithm: Greedily or Uniform. See how they differ <a href="#Polygons-interpolation-settings">here</a>
+
+<img src="xxx" />
+
+3. 
+
+4. 
+
+5.
+
+# Polygons interpolation settings
 
 One of the algorithms that will be used to interpolate between forms with various numbers of vertices need to be chosen when interpolating polygons.
 There are 2 options
@@ -16,7 +51,7 @@ There are 2 options
 Each new polygon will include no more points than the largest of the start or end frames if the number of points for a polygon on the start and end frames varies.
 Small polygons respond well to the method, but because there aren't many points, polygons may begin to rotate.
 
-### Uniform
+## Uniform
 
 | First frame polygon                                                                                                     | Created polygon                                                                                                       | n-th frame polygon |
 | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------ |
