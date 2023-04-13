@@ -64,7 +64,8 @@ There are 2 options
 
 | First frame polygon                                                                                                   | Created polygon                                                                                                      | n-th frame polygon                |
 | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| ![g_first](https://user-images.githubusercontent.com/115161827/231854900-77f7f7ce-cb25-4ed1-9781-0a3460e0a5e4.png)| ![g_middle](https://user-images.githubusercontent.com/115161827/231854708-66bbeefc-af7e-4712-8a03-32835b244ddb.png)|![g_last](https://user-images.githubusercontent.com/115161827/231854807-7d89de9e-5c26-40fd-8460-edce29911aa6.png)
+| ![g_first](https://user-images.githubusercontent.com/115161827/231856880-d52eb375-4f1f-45f6-9f8b-8d334efb2b7d.png)| ![g_middle](https://user-images.githubusercontent.com/115161827/231856930-18d2d3f0-7252-40e8-bfa8-0541338edbc3.png)|![g_last](https://user-images.githubusercontent.com/115161827/231856988-311de766-e1d1-482b-acd7-51781c84c3ed.png)
+
 
 
 Each new polygon will include no more points than the largest of the start or end frames if the number of points for a polygon on the start and end frames varies.
@@ -74,7 +75,8 @@ Small polygons respond well to the method, but because there aren't many points,
 
 | First frame polygon                                                                                                     | Created polygon                                                                                                       | n-th frame polygon |
 | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| ![u_first](https://user-images.githubusercontent.com/115161827/231854967-e2744837-a334-4266-bc50-ab828a2aa9ef.png)| ![u_middle](https://user-images.githubusercontent.com/115161827/231854999-48181318-290f-4bf2-a5e1-a9c8991b999e.png)|![u_last](https://user-images.githubusercontent.com/115161827/231855058-71d0ad3e-5853-4e03-9b0b-56cefe0f5039.png) 
+|![u_first](https://user-images.githubusercontent.com/115161827/231857037-481affe0-b844-4b22-96a0-437479e6e318.png)| ![u_middle](https://user-images.githubusercontent.com/115161827/231857099-0d4bbcaf-9b96-4312-8cb6-0e94da1fbf8a.png)| ![u_last](https://user-images.githubusercontent.com/115161827/231857156-36911631-a786-47e0-bbcc-58b1a437e9b9.png)
+
 
 
 
