@@ -45,21 +45,25 @@ def get_session_info(api: sly.Api, task_id, context, state, app_logger):
 @sly.timeit
 @send_error_data
 def track(api: sly.Api, task_id, context, state, app_logger):
+    app_logger.info("Start interpolation.")
     devided_context: ContextTypes = parse_context(api, context)
 
     if devided_context.polygons is not None:
+        app_logger.info("Polygon object detected. Start interpolation process.")
         model = LinearPolygonInterpolation(g.shape_complexity)
-        tracker = InterpolationTracker(devided_context.polygons, model)
+        tracker = InterpolationTracker(devided_context.polygons, model, api)
         tracker.track()
 
     if devided_context.rectangles is not None:
+        app_logger.info("Rectangle object detected. Start interpolation process.")
         model = LinearRectangleInterpolation()
-        tracker = InterpolationTracker(devided_context.rectangles, model)
+        tracker = InterpolationTracker(devided_context.rectangles, model, api)
         tracker.track()
 
     if devided_context.points is not None:
+        app_logger.info("Point object detected. Start interpolation process.")
         model = LinearPointInterpolation()
-        tracker = InterpolationTracker(devided_context.points, model)
+        tracker = InterpolationTracker(devided_context.points, model, api)
         tracker.track()
 
     tracker.finish_tracking()

@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from supervisely.geometry.geometry import Geometry
 
 
-import sly_globals as g
 from interpolation.base import BaseInterpolation
 
 import supervisely_lib as sly
@@ -30,10 +29,11 @@ class InterpolationTracker(object):
         "backward": Direction.backward,
     }
 
-    def __init__(self, context, interp_model: BaseInterpolation) -> None:
+    def __init__(self, context, interp_model: BaseInterpolation, api: sly.Api) -> None:
         self.interp_model = interp_model
         self.frame_index = context["frameIndex"]
         self.frames_count = context["frames"]
+        self.api = api
 
         self.track_id = context["trackId"]
         self.video_id = context["videoId"]
@@ -54,12 +54,12 @@ class InterpolationTracker(object):
 
     def get_dataset_id(self):
         oid = self.objects_id[0]
-        obj_info = g.api.post("/annotation-objects.info", {"id": oid})
+        obj_info = self.api.post("/annotation-objects.info", {"id": oid})
         return obj_info.json()["datasetId"]
 
     def match_object_figures_on_frames(self):
         # request info
-        response = g.api.post("figures.list", data=self._make_filter())
+        response = self.api.post("figures.list", data=self._make_filter())
 
         if response.status_code != HTTPStatus.OK:
             raise ValueError("Can't get figures info :(")
@@ -100,9 +100,10 @@ class InterpolationTracker(object):
 
     def finish_tracking(self):
         self._notify(len(self.objects_id) + 1)
+        self.api.logger.info("Tracking task finished.")
 
     def _get_objects_frames_bounds(self):
-        resp = g.api.post(
+        resp = self.api.post(
             "videos.objects.get-frames",
             {
                 "videoId": self.video_id,
@@ -139,7 +140,7 @@ class InterpolationTracker(object):
 
     def _notify(self, cur_pos: int) -> bool:
         # TODO: normal notification
-        stop = g.api.video.notify_progress(
+        stop = self.api.video.notify_progress(
             self.track_id,
             self.video_id,
             self.first_index,
@@ -160,7 +161,7 @@ class InterpolationTracker(object):
                 else:
                     msg = f"Skip interpolation for object #{object_id}: previous frames don't have enough figures."
 
-                g.logger.info(msg)
+                self.api.logger.info(msg)
                 raise ValueError(msg)
 
     def _track_obj(self, object_id: int, cur_pos: int) -> bool:
@@ -183,7 +184,7 @@ class InterpolationTracker(object):
             if frame_index in frames:
                 continue
 
-            g.api.video.figure.create(
+            self.api.video.figure.create(
                 self.video_id,
                 object_id,
                 frame_index,
