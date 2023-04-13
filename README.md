@@ -31,11 +31,11 @@ This app is used to track the movement and position of objects within a video. T
 
 <br>
 
-3. Create classes with Polygon, Point or Rectangle shapes and then select objects on several frames. There can only be one selected object per class in a frame
+3. Create classes with Polygon, Point or Rectangle shapes and then draw figures on the several frames. There can only be one figure per object (class) in a frame
 
 4. Choose start frame (or range of frames via Select tool), in track settings select runned Interpolation Tracker app, direction and number of frames
 
-5. Click `Track` button. When an object on the starting frame is selected, tracking begins for that object. If no objects are selected, tracking starts for all of the objects on the frame. Be aware that tracking will not work if some class has only an object in the start frame and none in the tracking direction (see example below)
+5. Click `Track` button. When a figure on the starting frame is selected, tracking begins for that figure. If no figures are selected, tracking starts for all of the figures on the frame. Be aware that tracking will not work if some class has only a figure in the start frame and none in the tracking direction (see example below)
 
 # Track Examples
 
