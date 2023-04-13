@@ -1,11 +1,12 @@
 <div align="center" markdown> 
-<img src="xxx" />
+<img src="https://user-images.githubusercontent.com/115161827/231768642-879cd495-903e-4ef2-a3de-b45a91a6f968.jpg" />
 
 # Interpolation tracker
   
 <p align="center">
   <a href="#Overview">Overview</a> •
   <a href="#How-To-Run">How To Run</a> •
+  <a href="#Track-Examples">Track Examples</a> •
   <a href="#Polygons-interpolation-settings">Polygons interpolation settings</a> 
 </p>
 
@@ -19,7 +20,7 @@
 
 # Overview 
 
-This tracker uses linear (pointwise) interpolation between figures on various frames to track points, polygons, and rectangles.
+This app is used to track the movement and position of objects within a video. This application uses linear (pointwise) interpolation to estimate the position of an object between two known data points in order to accurately track its movement over time. The Interpolation tracker works with points, rectangles and polygons (polygon has two interpolation algorithms to choose from).
 
 # How To Run
 
