@@ -27,8 +27,8 @@ This app is used to track the movement and position of objects within a video. T
 1. Start the application from Ecosystem
 
 2. Select the <a href="#Polygons-interpolation-settings">polygons interpolation settings</a> and click `Run` button
+![screenshot-dev-supervise-ly-ecosystem-apps-interpolation_tracker_v1-1681394922857](https://user-images.githubusercontent.com/115161827/231813349-16eefdf2-fe28-4ab6-9efc-86e7a9f0024f.png)
 
-<br>
 
 4. Run the video labeling interface on the project you want to work with
 
@@ -37,6 +37,7 @@ This app is used to track the movement and position of objects within a video. T
 4. Choose the start frame (or range of frames via the Select tool), in track settings select running Interpolation Tracker app, direction, and number of frames
 
 5. Click `Track` button. When a figure on the starting frame is selected, tracking begins for that figure. If no figures are selected, tracking starts for all of the figures on the frame. Be aware that tracking will not work if some class has only a figure in the start frame and none in the tracking direction (see example below)
+![gif-objects-interpolation](https://user-images.githubusercontent.com/115161827/231813506-8f7255dd-9cbd-40d5-8337-477d0f4d816d.gif)
 
 # Track Examples
 
