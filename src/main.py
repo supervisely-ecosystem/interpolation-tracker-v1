@@ -22,7 +22,8 @@ def send_error_data(func):
             value = func(*args, **kwargs)
         except Exception as e:
             track_id = kwargs["context"]["trackId"]
-            g.api.post(
+            api = kwargs["api"]
+            api.post(
                 "videos.notify-annotation-tool",
                 data={
                     "type": "videos:tracking-error",
