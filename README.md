@@ -64,7 +64,8 @@ There are 2 options
 
 | First frame polygon                                                                                                   | Created polygon                                                                                                      | n-th frame polygon                |
 | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| ![uniform_end](https://user-images.githubusercontent.com/87002239/231024683-360ec789-2764-49c9-90c6-014dd17d7dd2.png) | ![greedy_mid](https://user-images.githubusercontent.com/87002239/231024687-b32de7b8-2879-42d6-aa7c-ec05f3a6a905.png) |![greedy_end](https://user-images.githubusercontent.com/87002239/231024688-89c78047-0c88-488c-be88-6eca06a9c094.png) |
+| ![g_first](https://user-images.githubusercontent.com/115161827/231854900-77f7f7ce-cb25-4ed1-9781-0a3460e0a5e4.png)| ![g_middle](https://user-images.githubusercontent.com/115161827/231854708-66bbeefc-af7e-4712-8a03-32835b244ddb.png)|![g_last](https://user-images.githubusercontent.com/115161827/231854807-7d89de9e-5c26-40fd-8460-edce29911aa6.png)
+
 
 Each new polygon will include no more points than the largest of the start or end frames if the number of points for a polygon on the start and end frames varies.
 Small polygons respond well to the method, but because there aren't many points, polygons may begin to rotate.
@@ -73,7 +74,8 @@ Small polygons respond well to the method, but because there aren't many points,
 
 | First frame polygon                                                                                                     | Created polygon                                                                                                       | n-th frame polygon |
 | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| ![uniform_start](https://user-images.githubusercontent.com/87002239/231024690-dd29b0e4-81f7-4b61-9e13-0525ad61e8de.png) | ![uniform_mid](https://user-images.githubusercontent.com/87002239/231024691-b9048f36-ec11-48c1-961c-97201bc3e44c.png) |![uniform_end](https://user-images.githubusercontent.com/87002239/231024683-360ec789-2764-49c9-90c6-014dd17d7dd2.png)|
+| ![u_first](https://user-images.githubusercontent.com/115161827/231854967-e2744837-a334-4266-bc50-ab828a2aa9ef.png)| ![u_middle](https://user-images.githubusercontent.com/115161827/231854999-48181318-290f-4bf2-a5e1-a9c8991b999e.png)|![u_last](https://user-images.githubusercontent.com/115161827/231855058-71d0ad3e-5853-4e03-9b0b-56cefe0f5039.png) 
+
 
 
 The total number of points on the start and end polygons increases until it reaches the least common multiple of those points.
