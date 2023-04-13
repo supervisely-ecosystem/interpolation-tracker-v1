@@ -31,11 +31,24 @@ This tracker uses linear (pointwise) interpolation between figures on various fr
 
 <img src="xxx" />
 
-3. 
+3. Create classes with Polygon, Point or Rectangle shapes and then draw figures on the several frames. There can only be one figure per object (class) in a frame.
 
-4. 
+4. Choose start frame (or range of frames via Select tool), in track settings select runned Interpolation Tracker app, direction and number of frames.
 
-5.
+5. Click `Track` button. When a figure on the starting frame is selected, tracking begins for that figure. If no figures are selected, tracking starts for all of the figures on the frame. Be aware that tracking will not work if some class has only a figure in the start frame and none in the tracking direction (see example below).
+
+# Track Examples
+
+![track](url)
+
+Frames #18, #25, #30 contains figures of 3 different objects.
+
+| Objects   | Frames with figure | Frame range    | Track result                                                                  |
+| --------- | ------------------ | -------------- | ----------------------------------------------------------------------------- |
+| Object #1 | 18, 25, 30         | 18-27, forward | New figures will appear at frames 18-27                                       |
+| Object #2 | 18, 25             | 18-27, forward | New figures will appear at frames 18-25                                       |
+| Object #3 | 18                 | 18-27, forward | Tracking will fail because object #3 lacks sufficient data for interpolation. |
+
 
 # Polygons interpolation settings
 
