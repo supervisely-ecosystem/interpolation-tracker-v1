@@ -25,22 +25,24 @@ This app is used to track the movement and position of objects within a video. T
 # How To Run
 
 1. Start the application from Ecosystem
- 
+
+2. Select the <a href="#Polygons-interpolation-settings">polygons interpolation settings</a> and click `Run` button
+
+
 <br>
 
-2. Select the polygon interpolation algorithm: Greedily or Uniform. See how they differ <a href="#Polygons-interpolation-settings">here</a>
+3. Create classes with Polygon, Point or Rectangle shapes and then select objects on several frames. There can only be one selected object per class in a frame
 
-<img src="xxx" />
+4. Choose start frame (or range of frames via Select tool), in track settings select runned Interpolation Tracker app, direction and number of frames
 
-3. Create classes with Polygon, Point or Rectangle shapes and then draw figures on the several frames. There can only be one figure per object (class) in a frame.
-
-4. Choose start frame (or range of frames via Select tool), in track settings select runned Interpolation Tracker app, direction and number of frames.
-
-5. Click `Track` button. When a figure on the starting frame is selected, tracking begins for that figure. If no figures are selected, tracking starts for all of the figures on the frame. Be aware that tracking will not work if some class has only a figure in the start frame and none in the tracking direction (see example below).
+5. Click `Track` button. When an object on the starting frame is selected, tracking begins for that object. If no objects are selected, tracking starts for all of the objects on the frame. Be aware that tracking will not work if some class has only an object in the start frame and none in the tracking direction (see example below)
 
 # Track Examples
 
+<div align="center">
+
 ![track](https://user-images.githubusercontent.com/87002239/231757938-730b1deb-5887-47d7-a299-616411ffefa3.png)
+</div>
 
 Frames #18, #25, #30 contains figures of 3 different objects.
 
