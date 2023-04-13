@@ -1,29 +1,30 @@
 {
-    "name": "Interpolation tracker",
-    "type": "app",
-    "categories": [
-      "tracking",
-      "video"
-    ],
-    "description": "Track polygons, rectangles and points using linear interpolation",
-    "docker_image": "supervisely/base-py-sdk:6.71.8",
-    "main_script": "src/main.py",
-    "modal_template": "src/modal.html",
-    "modal_template_state": {
-      "shapeComplexity": "greedily"
-    },
-    "task_location": "application_sessions",
-    "icon": "https://img.icons8.com/color/100/000000/5.png",
-    "icon_cover": true,
-    "isolate": true,
-    "headless": true,
-    "session_tags": [
-      "sly_video_tracking"
-    ],
-    "allowed_shapes" : [
-      "polygon",
-      "point",
-      "rectangle"
-    ],
-    "community_agent": true
-  }
+  "name": "Interpolation tracker",
+  "type": "app",
+  "categories": [
+    "tracking",
+    "video"
+  ],
+  "description": "Track polygons, rectangles and points using linear interpolation",
+  "poster": "https://user-images.githubusercontent.com/115161827/231768642-879cd495-903e-4ef2-a3de-b45a91a6f968.jpg",
+  "docker_image": "supervisely/base-py-sdk:6.71.8",
+  "main_script": "src/main.py",
+  "modal_template": "src/modal.html",
+  "modal_template_state": {
+    "shapeComplexity": "greedily"
+  },
+  "task_location": "application_sessions",
+  "icon": "https://user-images.githubusercontent.com/115161827/231768582-ba91f0b5-af3e-400d-8dcd-d65ed8911cb7.png",
+  "icon_cover": true,
+  "isolate": true,
+  "headless": true,
+  "session_tags": [
+    "sly_video_tracking"
+  ],
+  "allowed_shapes": [
+    "polygon",
+    "point",
+    "rectangle"
+  ],
+  "community_agent": true
+}
