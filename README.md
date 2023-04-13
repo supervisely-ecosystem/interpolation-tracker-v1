@@ -20,7 +20,7 @@
 
 # Overview 
 
-This app is used to track the movement and position of objects within a video. This application uses linear (pointwise) interpolation to estimate the position of an object between two known data points in order to accurately track its movement over time. The Interpolation tracker works with points, rectangles and polygons (polygon has two interpolation algorithms to choose from).
+This app is used to track the movement and position of objects within a video. This application uses linear (pointwise) interpolation to estimate the position of an object between two known data points in order to accurately track its movement over time. The Interpolation tracker works with points, rectangles, and polygons (polygon has two interpolation algorithms to choose from).
 
 # How To Run
 
@@ -28,12 +28,13 @@ This app is used to track the movement and position of objects within a video. T
 
 2. Select the <a href="#Polygons-interpolation-settings">polygons interpolation settings</a> and click `Run` button
 
-
 <br>
 
-3. Create classes with Polygon, Point or Rectangle shapes and then draw figures on the several frames. There can only be one figure per object (class) in a frame
+4. Run the video labeling interface on the project you want to work with
 
-4. Choose start frame (or range of frames via Select tool), in track settings select runned Interpolation Tracker app, direction and number of frames
+3. Create classes with Polygon, Point, or Rectangle shapes and then draw figures on the several frames. There can only be one figure per object (class) in a frame
+
+4. Choose the start frame (or range of frames via the Select tool), in track settings select running Interpolation Tracker app, direction, and number of frames
 
 5. Click `Track` button. When a figure on the starting frame is selected, tracking begins for that figure. If no figures are selected, tracking starts for all of the figures on the frame. Be aware that tracking will not work if some class has only a figure in the start frame and none in the tracking direction (see example below)
 
