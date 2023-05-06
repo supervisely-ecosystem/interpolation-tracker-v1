@@ -4,7 +4,8 @@
   "categories": [
     "neural networks",
     "videos",
-    "tracking",
+    "detection & tracking",
+    "segmentation & tracking",
     "nn tools"
   ],
   "description": "Track polygons, rectangles and points using linear interpolation",
