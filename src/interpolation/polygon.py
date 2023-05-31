@@ -86,11 +86,13 @@ class BasePolygonInterpolation(BaseInterpolation):
                 )
                 start_fig = add_points_to_obj(start_fig, start_total_points)
                 end_fig = add_points_to_obj(end_fig, end_total_points)
+                # sort
+                start_fig, end_fig = sort_for_interpolation(start_fig, end_fig)
             elif self.shape_complexity is ShapeComplexity.greedily:
                 start_fig, end_fig = add_points_to_obj_greedly(start_fig, end_fig)
 
-            # sort
-            start_fig, end_fig = sort_for_interpolation(start_fig, end_fig)
+            # # sort
+            # start_fig, end_fig = sort_for_interpolation(start_fig, end_fig)
 
             # interpolate
             interpolation = self._create_vectorized_interpolation(

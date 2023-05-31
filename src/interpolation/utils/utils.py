@@ -87,7 +87,7 @@ def sort_for_interpolation(obj1: np.ndarray, obj2: np.ndarray) -> Tuple[np.ndarr
         Tuple[np.ndarray, np.ndarray]: sorted polygons.
     """
     if obj1.shape[0] != obj2.shape[0]:
-        raise ValueError("Can sort only poligons with same number of vertices.")
+        raise ValueError("Can sort only polygons with same number of vertices.")
 
     min_d = np.inf
     shift = 0
@@ -136,75 +136,141 @@ def add_points_to_obj(obj: np.ndarray, total_points: int) -> np.ndarray:
     return np.array(new_obj[:-1])
 
 
+def obj_bbox(obj: np.ndarray):
+    bot_right = (np.max(obj[:, 0]), np.min(obj[:, 1]))
+    top_left = (np.min(obj[:, 0]), np.max(obj[:, 1]))
+    center = np.mean([top_left, bot_right], axis=0)
+    return top_left, bot_right, center
+
+def shift_and_resize(obj1: np.ndarray, obj2: np.ndarray):
+    o1_tl, o1_br, o1_center = obj_bbox(obj1)
+    o2_tl, o2_br, o2_center = obj_bbox(obj2)
+    shifted_o1 = obj1.copy() - o1_center
+    shifted_o2 = obj2.copy() - o2_center
+
+    o1_o2_ratio = np.array((
+        abs(o1_tl[0] - o1_br[0]) / abs(o2_tl[0] - o2_br[0]),
+        abs(o1_tl[1] - o1_br[1]) / abs(o2_tl[1] - o2_br[1]),
+    ))
+
+    shifted_o2 = shifted_o2 * o1_o2_ratio
+
+    return shifted_o1, shifted_o2
+
+
+def polygon_match(small_obj: np.ndarray, big_obj: np.ndarray):
+    def cosin_sim_matrix(v1: np.ndarray, v2: np.ndarray, eps: float = 1e-8):
+        dot_mat = v1 @ v2.T
+        norm_prod_mat = np.linalg.norm(v1, axis=1)[:, None] @ np.linalg.norm(v2, axis=1)[None, :]
+        return 1 - dot_mat / (norm_prod_mat + eps)
+    
+    # sgn = obj_order_sign(small_obj)
+    # if sgn != obj_order_sign(big_obj):
+    #     big_obj = big_obj[::-1]
+
+    small_shifted, big_shifted = shift_and_resize(small_obj, big_obj)
+    sim_mat = cosin_sim_matrix(small_shifted, big_shifted)
+
+    mins = []
+    start_i = None
+    used = []
+
+    for vec in sim_mat:
+        min_i = np.argmin(vec)
+        mins.append(min_i)
+        if start_i is None:
+            start_i = min_i
+        else:
+            if start_i > min_i:
+                used = list(range(min_i))
+                used.extend(list(range(start_i, len(big_obj))))
+            else:
+                used = list(range(start_i, min_i))
+        sim_mat[:, used] = np.inf
+
+    return {i: min_i for i, min_i in enumerate(mins)}
+
+
 def add_points_to_obj_greedly(obj1: np.ndarray, obj2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    PosDist = namedtuple("PosDist", ["pos", "dist"])
+    def calc_diff(prev, next, maxl):
+        if prev > next:
+            return maxl - prev + next
+        return next - prev
+
+    def uniform_points(point, next_point, num):
+        dx = (next_point[0] - point[0]) / (num + 1)
+        dy = (next_point[1] - point[1]) / (num + 1)
+        points = []
+
+        for i in range(1, num + 1):
+            nx = point[0] + dx * i
+            ny = point[1] + dy * i
+            points.append([nx, ny])
+        
+        return points
 
     if len(obj1) > len(obj2):
-        bg_obj, sm_obj = obj1.copy(), obj2.copy()
-        target = obj2
-        target_str = "obj2"
-    elif len(obj2) > len(obj1):
-        bg_obj, sm_obj = obj2.copy(), obj1.copy()
-        target = obj1
-        target_str = "obj1"
+        small_obj = obj2
+        big_obj = obj1
+        small_first = False
     else:
-        return obj1, obj2
+        small_obj = obj1
+        big_obj = obj2
+        small_first = True
 
-    sm_bg_index_dct: Dict[int, PosDist] = {pos: PosDist(-1, np.inf) for pos in range(len(sm_obj))}
-    used_bg_ind = set()
-    bg_obj = move_to_axis_begin(bg_obj)
-    sm_obj = move_to_axis_begin(sm_obj)
+    match_dct = polygon_match(small_obj, big_obj)
+    
+    sm_obj_ind = list(match_dct.keys())
+    sm_obj_ind.append(sm_obj_ind[0])
 
-    for sm_i, point in enumerate(sm_obj):
-        for bg_i, nearest_point in enumerate(bg_obj):
-            dist = np.linalg.norm(point - nearest_point)
-            if sm_bg_index_dct[sm_i].dist > dist and bg_i not in used_bg_ind:
-                sm_bg_index_dct[sm_i] = PosDist(bg_i, dist)
-        used_bg_ind.add(sm_bg_index_dct[sm_i].pos)
-        # bg_sm_index_dct[sm_bg_index_dct[sm_i].pos] = sm_i
+    bg_obj_ind = list(match_dct.values())
+    bg_obj_ind.append(bg_obj_ind[0])
 
     new_sm_obj = []
-    prev_i, prev_point = 0, target[0]
+    new_bg_obj = []
+    flag = False
 
-    def calc_diff(prev_i, next_i, obj_len):
-        if prev_i < next_i:
-            return abs(prev_i - next_i)
-        return obj_len - prev_i + next_i
+    for l, r in zip(sm_obj_ind[:-1], sm_obj_ind[1:]):
+        bl, br = match_dct[l], match_dct[r]
+        diff = calc_diff(bl, br, len(big_obj))
+        newpoints = []
 
-    for sm_i, point in enumerate(np.roll(target, -1, axis=0), start=1):
-        sm_i = sm_i % len(sm_obj)
-        diff = calc_diff(sm_bg_index_dct[prev_i].pos, sm_bg_index_dct[sm_i].pos, len(bg_obj))
+        if diff == 1:
+            if flag:
+                flag = False
+                new_sm_obj.append(small_obj[l])
+                continue
+            new_sm_obj.append(small_obj[l])
+            new_bg_obj.append(big_obj[bl])
+        elif diff == 0:
+            if flag:
+                new_sm_obj.append(small_obj[l])
+                continue
+            num = 0
+            while bg_obj_ind[r] == bg_obj_ind[l]:
+                num += 1
+                r = (r + 1) % len(match_dct)
 
-        if diff < 1:
-            raise ValueError("Smth goes wrong.")
-        elif diff == 1:
-            new_sm_obj.append(list(point))
-            prev_point = point
-            prev_i = sm_i
-            continue
+            newpoints = uniform_points(big_obj[bl], big_obj[(bl + 1) % len(big_obj)], num)
+            new_sm_obj.append(small_obj[l])
+            new_bg_obj.append(big_obj[bl])
+            new_bg_obj.extend(newpoints)
+            flag = True
+        elif diff > 1:
+            newpoints = uniform_points(small_obj[l], small_obj[r], diff - 1)
+            new_sm_obj.append(small_obj[l])
+            new_sm_obj.extend(newpoints)
 
-        dx = (point[0] - prev_point[0]) / diff
-        dy = (point[1] - prev_point[1]) / diff
+            if flag:
+                bl = (bl + 1) % len(big_obj)
 
-        for i in range(1, diff):
-            nx = prev_point[0] + dx * i
-            ny = prev_point[1] + dy * i
-            new_sm_obj.append([nx, ny])
+            if bl > br:
+                new_bg_obj.extend(big_obj[bl:])
+                new_bg_obj.extend(big_obj[:br])
+            else:
+                new_bg_obj.extend(big_obj[bl:br])
+            flag = False
 
-        new_sm_obj.append(list(point))
-        prev_point = point
-        prev_i = sm_i
-
-    if target_str == "obj1":
-        return np.array(new_sm_obj), obj2
-    return obj1, np.array(new_sm_obj)
-
-
-def move_to_axis_begin(obj: np.ndarray) -> np.ndarray:
-    x_shift = min(obj[:, 0])
-    y_shift = min(obj[:, 1])
-
-    obj[:, 0] -= x_shift
-    obj[:, 1] -= y_shift
-
-    return obj
+    if small_first:
+        return np.array(new_sm_obj), np.array(new_bg_obj)
+    return np.array(new_bg_obj), np.array(new_sm_obj)
