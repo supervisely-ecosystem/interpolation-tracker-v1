@@ -213,10 +213,12 @@ def add_points_to_obj_greedly(obj1: np.ndarray, obj2: np.ndarray) -> Tuple[np.nd
         small_obj = obj2
         big_obj = obj1
         small_first = False
-    else:
+    elif len(obj1) < len(obj2):
         small_obj = obj1
         big_obj = obj2
         small_first = True
+    else:
+        return sort_for_interpolation(obj1, obj2)
 
     match_dct = polygon_match(small_obj, big_obj)
     
