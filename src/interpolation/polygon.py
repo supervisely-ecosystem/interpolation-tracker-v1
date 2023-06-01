@@ -12,7 +12,7 @@ from interpolation.utils import (
     add_points_to_obj,
     rm_points,
     sort_for_interpolation,
-    add_points_to_obj_greedly,
+    add_points_to_obj_greedily,
 )
 
 
@@ -89,7 +89,7 @@ class BasePolygonInterpolation(BaseInterpolation):
                 # sort
                 start_fig, end_fig = sort_for_interpolation(start_fig, end_fig)
             elif self.shape_complexity is ShapeComplexity.greedily:
-                start_fig, end_fig = add_points_to_obj_greedly(start_fig, end_fig)
+                start_fig, end_fig = add_points_to_obj_greedily(start_fig, end_fig)
 
             # # sort
             # start_fig, end_fig = sort_for_interpolation(start_fig, end_fig)

@@ -191,7 +191,7 @@ def polygon_match(small_obj: np.ndarray, big_obj: np.ndarray):
     return {i: min_i for i, min_i in enumerate(mins)}
 
 
-def add_points_to_obj_greedly(obj1: np.ndarray, obj2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def add_points_to_obj_greedily(obj1: np.ndarray, obj2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     def calc_diff(prev, next, maxl):
         if prev > next:
             return maxl - prev + next
