@@ -11,7 +11,7 @@
   ],
   "description": "Track polygons, rectangles and points using linear interpolation",
   "poster": "https://user-images.githubusercontent.com/115161827/231768642-879cd495-903e-4ef2-a3de-b45a91a6f968.jpg",
-  "docker_image": "supervisely/base-py-sdk:6.71.8",
+  "docker_image": "supervisely/base-py-sdk:6.72.56",
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
