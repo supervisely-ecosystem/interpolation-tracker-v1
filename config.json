@@ -1,34 +1,34 @@
 {
-  "name": "Objects Interpolation on video",
-  "type": "app",
-  "categories": [
-    "neural network",
-    "videos",
-    "detection & tracking",
-    "segmentation & tracking",
-    "nn tools",
-    "data operations"
-  ],
-  "description": "Track polygons, rectangles and points using linear interpolation",
-  "poster": "https://user-images.githubusercontent.com/115161827/231768642-879cd495-903e-4ef2-a3de-b45a91a6f968.jpg",
-  "docker_image": "supervisely/base-py-sdk:6.72.70",
-  "main_script": "src/main.py",
-  "modal_template": "src/modal.html",
-  "modal_template_state": {
-    "shapeComplexity": "greedily"
-  },
-  "task_location": "application_sessions",
-  "icon": "https://user-images.githubusercontent.com/115161827/231768582-ba91f0b5-af3e-400d-8dcd-d65ed8911cb7.png",
-  "icon_cover": true,
-  "isolate": true,
-  "headless": true,
-  "session_tags": [
-    "sly_video_tracking"
-  ],
-  "allowed_shapes": [
-    "polygon",
-    "point",
-    "rectangle"
-  ],
-  "community_agent": true
+    "name": "Objects Interpolation on video",
+    "type": "app",
+    "categories": [
+        "neural network",
+        "videos",
+        "detection & tracking",
+        "segmentation & tracking",
+        "nn tools",
+        "data operations"
+    ],
+    "description": "Track polygons, rectangles and points using linear interpolation",
+    "poster": "https://user-images.githubusercontent.com/115161827/231768642-879cd495-903e-4ef2-a3de-b45a91a6f968.jpg",
+    "docker_image": "supervisely/data-operations:0.0.1",
+    "main_script": "src/main.py",
+    "modal_template": "src/modal.html",
+    "modal_template_state": {
+        "shapeComplexity": "greedily"
+    },
+    "task_location": "application_sessions",
+    "icon": "https://user-images.githubusercontent.com/115161827/231768582-ba91f0b5-af3e-400d-8dcd-d65ed8911cb7.png",
+    "icon_cover": true,
+    "isolate": true,
+    "headless": true,
+    "session_tags": [
+        "sly_video_tracking"
+    ],
+    "allowed_shapes": [
+        "polygon",
+        "point",
+        "rectangle"
+    ],
+    "community_agent": true
 }
