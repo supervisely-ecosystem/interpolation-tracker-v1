@@ -135,7 +135,7 @@ class InterpolationTracker(object):
         filter_fig["filter"] = [
             {"field": "objectId", "operator": "in", "value": self.objects_id},
         ]
-        filter_fig["fields"] = ["id", "objectId", "meta", "geometry", "geometryType"]
+        filter_fig["fields"] = ["id", "objectId", "meta", "geometry", "geometryType", "imageId"]
         self.api.logger.debug(f"Filter for figures: {filter_fig}")
         return filter_fig
 
