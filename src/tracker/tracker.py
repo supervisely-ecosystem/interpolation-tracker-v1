@@ -136,6 +136,7 @@ class InterpolationTracker(object):
             {"field": "objectId", "operator": "in", "value": self.objects_id},
         ]
         filter_fig["fields"] = ["id", "objectId", "meta", "geometry", "geometryType"]
+        self.api.logger.debug(f"Filter for figures: {filter_fig}")
         return filter_fig
 
     def _notify(self, cur_pos: int) -> bool:
