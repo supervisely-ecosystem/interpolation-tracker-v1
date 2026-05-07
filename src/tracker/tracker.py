@@ -9,7 +9,7 @@ from supervisely.geometry.geometry import Geometry
 
 from interpolation.base import BaseInterpolation
 
-import supervisely_lib as sly
+import supervisely as sly
 
 
 @dataclass

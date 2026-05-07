@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv("debug.env")
 
-import supervisely_lib as sly
+import supervisely as sly
 
 
 logger = sly.logger

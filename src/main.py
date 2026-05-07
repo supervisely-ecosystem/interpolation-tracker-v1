@@ -2,7 +2,7 @@ from collections import namedtuple
 import functools
 
 import sly_globals as g
-import supervisely_lib as sly
+import supervisely as sly
 
 from tracker import InterpolationTracker
 from interpolation import (
